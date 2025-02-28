@@ -7,4 +7,4 @@ for txt in test_strings:
     if re.match(pattern, txt):
         print(f"'{txt}' — Match")
     else:
-        print(f"'{txt}' — Doesn't Match")
+        print(f"'{txt}' — Doesn't")
