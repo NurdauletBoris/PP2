@@ -4,7 +4,7 @@ pattern = r'^a.*b$'
 
 test_strings = [
     "ab",       
-    "acb",      
+    "acdaadadadb",      
     "abc",      
 
 ]

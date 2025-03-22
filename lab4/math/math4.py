@@ -1,5 +1,7 @@
+import math
+
 base = 5
 height = 6
 
-area = base * height
+area = math.prod([base, height])  
 print(float(area))
