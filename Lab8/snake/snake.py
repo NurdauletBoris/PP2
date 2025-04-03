@@ -1,7 +1,6 @@
 import pygame
 import random
 import sys
-import time
 
 pygame.init()
 
@@ -28,33 +27,16 @@ def draw_snake(snake_body):
     for segment in snake_body:
         pygame.draw.rect(screen, GREEN, pygame.Rect(segment[0]*CELL_SIZE, segment[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
-# рисуем еду
-def draw_food(position, weight):
-    if weight == 1:
-        color = (255, 0, 0)
-        size = 24
-    elif weight == 2:
-        color = (255, 165, 0)
-        size = 20
-    else:
-        color = (255, 255, 0)
-        size = 16
+# еда
+def draw_food(position):
+    pygame.draw.rect(screen, RED, pygame.Rect(position[0]*CELL_SIZE, position[1]*CELL_SIZE, CELL_SIZE, CELL_SIZE))
 
-    # Центрируем квадрат по клетке
-    px = position[0] * CELL_SIZE + CELL_SIZE // 2 - size // 2
-    py = position[1] * CELL_SIZE + CELL_SIZE // 2 - size // 2
-
-    pygame.draw.rect(screen, color, pygame.Rect(px, py, size, size))
-
-
-# создаём еду не на змее
+# ставим еду не на змею
 def generate_food(snake):
     while True:
         pos = (random.randint(0, GRID_WIDTH - 1), random.randint(0, GRID_HEIGHT - 1))
         if pos not in snake:
-            weight = random.choice([1, 2, 3])  # вес: 1, 2 или 3
-            timer = time.time()               # время появления
-            return pos, weight, timer
+            return pos
 
 # выводим счёт и уровень
 def display_info(score, level):
@@ -65,21 +47,21 @@ def display_info(score, level):
 def game():
     snake = [(5, 5), (4, 5), (3, 5)]
     direction = (1, 0)
-    food_pos, food_weight, food_timer = generate_food(snake)
+    food = generate_food(snake)
     score = 0
     level = 1
     speed = 10
 
     while True:
-        screen.fill((10, 30, 10))  # фон
+        screen.fill((10, 30, 10))  # тёмный фон
         display_info(score, level)
 
-        # управление
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
                 sys.exit()
             elif event.type == pygame.KEYDOWN:
+                # управление
                 if event.key == pygame.K_UP and direction != (0, 1):
                     direction = (0, -1)
                 elif event.key == pygame.K_DOWN and direction != (0, -1):
@@ -92,7 +74,7 @@ def game():
         head_x, head_y = snake[0]
         new_head = (head_x + direction[0], head_y + direction[1])
 
-        # если врезался
+        # проверка на врезался
         if (new_head[0] < 0 or new_head[0] >= GRID_WIDTH or
             new_head[1] < 0 or new_head[1] >= GRID_HEIGHT or
             new_head in snake):
@@ -101,22 +83,18 @@ def game():
 
         snake.insert(0, new_head)
 
-        # если съел еду
-        if new_head == food_pos:
-            score += food_weight
-            food_pos, food_weight, food_timer = generate_food(snake)
+        # съел еду
+        if new_head == food:
+            score += 1
+            food = generate_food(snake)
             if score % 4 == 0:
                 level += 1
                 speed += 2
         else:
             snake.pop()
 
-        # проверка таймера — если прошло >5 секунд, еда исчезает
-        if time.time() - food_timer > 5:
-            food_pos, food_weight, food_timer = generate_food(snake)
-
         draw_snake(snake)
-        draw_food(food_pos, food_weight)
+        draw_food(food)
 
         pygame.display.flip()
         clock.tick(speed)
