@@ -1,6 +1,7 @@
 import pygame
 import random
 import sys
+import os
 
 pygame.init()
 pygame.mixer.init()
@@ -10,23 +11,24 @@ WIDTH, HEIGHT = 600, 800
 screen = pygame.display.set_mode((WIDTH, HEIGHT))
 pygame.display.set_caption("RACING")
 clock = pygame.time.Clock()
+BASE_DIR = os.path.dirname(__file__)
 
 # Загрузка изображений
-background = pygame.image.load('racer/AnimatedStreet.png')
+background = pygame.image.load(os.path.join(BASE_DIR, 'AnimatedStreet.png'))
 background = pygame.transform.scale(background, (WIDTH, HEIGHT))
 
-player_img = pygame.image.load('racer/Player.png')
+player_img = pygame.image.load(os.path.join(BASE_DIR, 'Player.png'))
 player_img = pygame.transform.scale(player_img, (60, 80))
 
-enemy_img = pygame.image.load('racer/Enemy.png')
+enemy_img = pygame.image.load(os.path.join(BASE_DIR, 'Enemy.png'))
 enemy_img = pygame.transform.scale(enemy_img, (60, 80))
 
-coin_img = pygame.image.load('racer/coin.png')
+coin_img = pygame.image.load(os.path.join(BASE_DIR, 'coin.png'))
 coin_img = pygame.transform.scale(coin_img, (40, 40))
 
 # Загрузка звуков
-pygame.mixer.music.load('racer/background.wav')
-crash_sound = pygame.mixer.Sound('racer/crash.wav')
+pygame.mixer.music.load(os.path.join(BASE_DIR, 'background.wav'))
+crash_sound = pygame.mixer.Sound(os.path.join(BASE_DIR, 'crash.wav'))
 
 
 #настройки игры
